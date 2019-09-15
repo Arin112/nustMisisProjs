@@ -192,14 +192,15 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			do{
 				p1 = randomPrime(), q1 = randomPrime();
 				n1 = p1*q1, phi1=(p1-1)*(q1-1), e1 = 7;
-				console.log("p1="+p1);
-				console.log("q1="+q1);
-				console.log("n1="+n1);
-				console.log("phi1="+phi1);
-				console.log("e1="+e1);
+				//console.log("p1="+p1);
+				//console.log("q1="+q1);
+				//console.log("n1="+n1);
+				//console.log("phi1="+phi1);
+				//console.log("e1="+e1);
 				
 			}
 			while(isNaN(d1=modInverse(e1, phi1)) || (gcd(e1, n1)!=1) || p1==q1 || (gcd(p1, q1)!=1) || (d1*e1%phi1!=1) || !checkKeys(e1, d1, n1));
+			pl("Случайные простые числа первого агента: $(" + q1+", "+p1+")$, их произведение $"+n1+"$, функция эйлера от произведения $"+phi1+"$.");
 			//var d1 = modInverse(e1, phi1);
 			pl("Открытая пара для первого агента: $("+e1.toString(10)+", "+n1.toString(10)+")$, закрытая пара для первого агента: $("+d1.toString(10)+", "+n1.toString(10)+")$.");
 
@@ -208,6 +209,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 				n2 = p2*q2, phi2=(p2-1)*(q2-1), e2 = 7;
 			}
 			while(isNaN(d2=modInverse(e2, phi2)) || (gcd(e2, n2)!=1) || p2==q2 || (gcd(p2, q2)!=1) || (d2*e2%phi2!=1) || !checkKeys(e2, d2, n2));
+			pl("Случайные простые числа второго агента: $(" + q2+", "+p2+")$, их произведение $"+n2+"$, функция эйлера от произведения $"+phi2+"$.");
 			//var d2 = modInverse(e2, phi2);
 			pl("Открытая пара для второго агента: $("+e2.toString(10)+", "+n2.toString(10)+")$, закрытая пара для второго агента: $("+d2.toString(10)+", "+n2.toString(10)+")$.");
 			
@@ -216,6 +218,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 				n3 = p3*q3, phi3=(p3-1)*(q3-1), e3 = 7;
 			}
 			while(isNaN(d3=modInverse(e3, phi3)) || gcd(e3, n3)!=1 || p3==q3 || (gcd(p3, q3)!=1) || (d3*e3%phi3!=1) || !checkKeys(e3, d3, n3));
+			pl("Случайные простые числа третьего агента: $(" + q3+", "+p3+")$, их произведение $"+n3+"$, функция эйлера от произведения $"+phi3+"$.");
 			//var d3 = modInverse(e3, phi3);
 			pl("Открытая пара для третьего агента: $("+e3.toString(10)+", "+n3.toString(10)+")$, закрытая пара для третьего агента: $("+d3.toString(10)+", "+n3.toString(10)+")$.");
 
