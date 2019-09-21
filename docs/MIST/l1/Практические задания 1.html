@@ -52,7 +52,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 	}
 	code {
 		font-family: Courier, 'New Courier', monospace;
-		background-color: rgba(27,31,35,.05);
+		/*background-color: rgba(27,31,35,.05);*/
 		color: green;
 		border-radius: 3px;
 		font-size: 85%;
@@ -71,6 +71,10 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 	<p id="ans"></p>
 	<p id="task2"></p>
 	<p id="ans2"><hr></p>
+	<p id="task3"></p>
+	<p id="ans3"><hr></p>
+	<p id="task4"></p>
+	<p id="ans4"></p>
 
 	<script>
 		currentP = "task1";
@@ -89,16 +93,19 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			document.getElementById(tid).onclick = func;
 		}
 		function getRandNum(from, to){ return from+~~(Math.random()*(to-from)); }
+		function mmod(a, b){
+			return ((a%b)+b)%b;
+		}
 		function isPrime(value){
-			for(var i = 3; i < Math.sqrt(value); i+=2)
+			for(var i = 3; i <= Math.sqrt(value); i+=2)
 				if(value % i === 0)
 					return false;
 			if(value === 2)return true;
 			if(value % 2 === 0)return false;
 			return value > 1;
 		}
-		function randomPrime(){
-			var rCnt = getRandNum(0, 20);
+		function randomPrime(from=20, to=40){
+			var rCnt = getRandNum(from, to);
 			var i=12;
 			for(var cnt=0;cnt<rCnt;i++){
 				if(isPrime(i))cnt+=1;
@@ -139,6 +146,16 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			}
 			return [b, signX * x, signY * y];
 		}
+		function shuffle(a) {
+			var j, x, i;
+			for (i = a.length - 1; i > 0; i--) {
+				j = Math.floor(Math.random() * (i + 1));
+				x = a[i];
+				a[i] = a[j];
+				a[j] = x;
+			}
+			return a;
+		}
 		var gcd = function(a, b) {
 			return b==0?a:gcd(b, a % b);
 		}
@@ -170,14 +187,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 		p("Секретное число для третьего агента:"); creteEdit("val3"); createButton("Generate", function(){output("val3", getRandNum(10, 50))}); newLine();
 		newLine();
 		function checkInt(val){ return Number(val)==NaN || Number(val)<=0 || Number(val)>50}
-		function checkKeys(e, d, m){
-			for(var i=400;i<410;i++){
-				if(modPow(modPow(i, e, m), d, m)!=i){
-					return false;
-				}
-			}
-			return true;
-		}
+
 		function calcAll(){
 			if(checkInt(input("val1")) || checkInt(input("val2")) || checkInt(input("val3"))){
 				alert("Все поля должны быть числами больше нуля и меньше 50.");
@@ -192,15 +202,14 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			do{
 				p1 = randomPrime(), q1 = randomPrime();
 				n1 = p1*q1, phi1=(p1-1)*(q1-1), e1 = 7;
-				//console.log("p1="+p1);
-				//console.log("q1="+q1);
-				//console.log("n1="+n1);
-				//console.log("phi1="+phi1);
-				//console.log("e1="+e1);
+				console.log("p1="+p1);
+				console.log("q1="+q1);
+				console.log("n1="+n1);
+				console.log("phi1="+phi1);
+				console.log("e1="+e1);
 				
 			}
-			while(isNaN(d1=modInverse(e1, phi1)) || (gcd(e1, n1)!=1) || p1==q1 || (gcd(p1, q1)!=1) || (d1*e1%phi1!=1) || !checkKeys(e1, d1, n1));
-			pl("Случайные простые числа первого агента: $(" + q1+", "+p1+")$, их произведение $"+n1+"$, функция эйлера от произведения $"+phi1+"$.");
+			while(isNaN(d1=modInverse(e1, phi1)) || (gcd(e1, n1)!=1) || p1==q1 || (gcd(p1, q1)!=1) || (d1*e1%phi1!=1));
 			//var d1 = modInverse(e1, phi1);
 			pl("Открытая пара для первого агента: $("+e1.toString(10)+", "+n1.toString(10)+")$, закрытая пара для первого агента: $("+d1.toString(10)+", "+n1.toString(10)+")$.");
 
@@ -208,8 +217,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 				p2 = randomPrime(), q2 = randomPrime();
 				n2 = p2*q2, phi2=(p2-1)*(q2-1), e2 = 7;
 			}
-			while(isNaN(d2=modInverse(e2, phi2)) || (gcd(e2, n2)!=1) || p2==q2 || (gcd(p2, q2)!=1) || (d2*e2%phi2!=1) || !checkKeys(e2, d2, n2));
-			pl("Случайные простые числа второго агента: $(" + q2+", "+p2+")$, их произведение $"+n2+"$, функция эйлера от произведения $"+phi2+"$.");
+			while(isNaN(d2=modInverse(e2, phi2)) || (gcd(e2, n2)!=1) || p2==q2 || (gcd(p2, q2)!=1) || (d2*e2%phi2!=1));
 			//var d2 = modInverse(e2, phi2);
 			pl("Открытая пара для второго агента: $("+e2.toString(10)+", "+n2.toString(10)+")$, закрытая пара для второго агента: $("+d2.toString(10)+", "+n2.toString(10)+")$.");
 			
@@ -217,8 +225,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 				p3 = randomPrime(), q3 = randomPrime();
 				n3 = p3*q3, phi3=(p3-1)*(q3-1), e3 = 7;
 			}
-			while(isNaN(d3=modInverse(e3, phi3)) || gcd(e3, n3)!=1 || p3==q3 || (gcd(p3, q3)!=1) || (d3*e3%phi3!=1) || !checkKeys(e3, d3, n3));
-			pl("Случайные простые числа третьего агента: $(" + q3+", "+p3+")$, их произведение $"+n3+"$, функция эйлера от произведения $"+phi3+"$.");
+			while(isNaN(d3=modInverse(e3, phi3)) || gcd(e3, n3)!=1 || p3==q3 || (gcd(p3, q3)!=1) || (d3*e3%phi3!=1));
 			//var d3 = modInverse(e3, phi3);
 			pl("Открытая пара для третьего агента: $("+e3.toString(10)+", "+n3.toString(10)+")$, закрытая пара для третьего агента: $("+d3.toString(10)+", "+n3.toString(10)+")$.");
 
@@ -236,7 +243,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			S = modPow(S, e3, n3);// (S**e3)%n3;
 			pl("Третий агент принимает полученное число и расшифровывает его при помощи своего закрытого ключа: $"+S.toString(10)+"^{"+d3.toString(10)+"} \\bmod"+n3.toString(10)+" = "+modPow(S, d3, n3)+"$.");
 			S = modPow(S, d3, n3);// (S**d3)%n3;
-			pl("После чего третий агент прибавляет к полученному числу своё секретное число: $"+S.toString(10)+"+"+num3.toString(10)+" = "+(S+num3)+"$.");
+			pl("После чего третий агент прибавляет к полученному числу своё секретное число: $"+S.toString(10)+"+"+num2.toString(10)+" = "+(S+num3)+"$.");
 			S=S+num3;
 			pl("Теперь третий агент шифрует полученное число при помощи открытого ключа первого агента: $"+S.toString(10)+"^{"+e1.toString(10)+"} \\bmod"+n1.toString(10)+" = "+modPow(S, e1, n1)+"$.");
 			S=modPow(S, e1, n1);// (S**e1)%n1;
@@ -261,36 +268,41 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 					s = "000000000" + s;
 					return s.substr(s.length-7);
 				}
-				ans="<code>"+str + "</code> <code>0b ";
+				ans="<th><code>"+str + "</code> <code>0b ";
 				for(var i=0;i<sLenght;i++)
 					ans = ans + pad("0000000000"+str.charCodeAt(i).toString(2))+" ";
-				return ans+"</code>";
+				return ans+"</code></th>";
 			}
 
 			var sLenght = 5;
 			var S = getRandStr(sLenght);
-			
-			pl("Секретная строка -	" + toB(S));
+			p("<div id = \"tid1\"class=\"table-responsive\"></div>");
+			currentP = "tid1";
+			p("<table id = \"tableId\"class=\"table table-striped table-sm\"></table>");
+			currentP ="tableId";
+			p("<tbody id=\"nt123\"></tbody>");
+			currentP = "nt123";
+			p("<tr><td>Секретная строка </td>" + toB(S)+"</tr>");
 			var g1 = getRandStr(sLenght), g2 = getRandStr(sLenght), g3 = getRandStr(sLenght);
-			pl("Секретная гамма первого агента  -	" + toB(g1));
-			pl("Секретная гамма второго агента  -	" + toB(g2));
-			pl("Секретная гамма третьего агента -	" + toB(g3));
+			p("<tr><td>Секретная гамма первого агента </td>" + toB(g1)+"</tr>");
+			p("<tr><td>Секретная гамма второго агента </td>" + toB(g2)+"</tr>");
+			p("<tr><td>Секретная гамма третьего агента </td>" + toB(g3)+"</tr>");
 			var newS = S;
 			String.prototype.replaceAt=function(index, replacement) {
 				return this.substr(0, index) + replacement+ this.substr(index + replacement.length);
 			}
 			for(var i=0;i<sLenght;i++) newS = newS.replaceAt(i, String.fromCharCode(S.charCodeAt(i)^g1.charCodeAt(i)^g2.charCodeAt(i)^g3.charCodeAt(i)));
-			pl("Результат шифрования при помощи трёх гамм (публичная строка) -	"+toB(newS));
+			p("<tr><td>Результат шифрования при помощи трёх гамм (публичная строка) </td>"+toB(newS)+"</tr>");
 			
 			for(var i=0;i<sLenght;i++) newS = newS.replaceAt(i, String.fromCharCode(newS.charCodeAt(i)^g1.charCodeAt(i)));
-			pl("Результат применения первой гаммы к публичной строке -	"+toB(newS));
+			p("<tr><td>Результат применения первой гаммы к публичной строке </td>"+toB(newS)+"</tr>");
 			
 			for(var i=0;i<sLenght;i++) newS = newS.replaceAt(i, String.fromCharCode(newS.charCodeAt(i)^g2.charCodeAt(i)));
-			pl("Результат применения второй гаммы к предыдущему результату -	"+toB(newS));
+			p("<tr><td>Результат применения второй гаммы к предыдущему результату </td>"+toB(newS)+"</tr>");
 			
 			for(var i=0;i<sLenght;i++) newS = newS.replaceAt(i, String.fromCharCode(newS.charCodeAt(i)^g3.charCodeAt(i)));
-			pl("Результат применения третьей гаммы к предыдущему результату -	"+toB(newS));
-
+			p("<tr><td>Результат применения третьей гаммы к предыдущему результату </td>"+toB(newS)+"</tr>");
+			currentP = "ans2";
 			if(S==newS) pl("Как видно, исходная и полученная строки совпадают.");
 			else pl("Они не совпали. Вот беда. Напишите мне, приложив копию этой страницы в любом виде.");
 			//hz();
@@ -300,30 +312,124 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 		createButton("Решить второе задание", solve2);
 		
 		function solve3(){
+			currentP = "ans3";
+			document.getElementById(currentP).innerHTML='';
 			//схема шамира. m = 3, n = 5
 			var S = getRandNum(10, 50), m=3, n=5;
-			pl("Секрет: "+S+", m = 3, n = 5.");
+			pl("Секрет: $"+S+"$, m = $3$, n = $5$.");
 			do{P=randomPrime();}while(P<=S || P<=n);
-			pl("Просто число p = "+P+".");
+			pl("Просто число p = $"+P+"$.");
 			var a1 = getRandNum(10, 20), a2 = getRandNum(10, 20); // a0==S
-			pl(""+a2+" * x**2 + "+a1+" * x + "+S+" - секретный многочлен");
-			var x1 = 1, y1 = a2+a1+S;
-			var x2 = 2, y2 = a2*x2*x2+a1*x2+S;
-			var x3 = 3, y3 = a2*x3*x3+a1*x3+S;
-			var x4 = 4, y4 = a2*x4*x4+a1*x4+S;
-			var x5 = 5, y5 = a2*x5*x5+a1*x5+S;
+			pl("$"+a2+"  x^2 + "+a1+"  x + "+S+"$ - секретный многочлен");
+			var [x1, x2, x3, x4, x5] = shuffle([1, 2, 3, 4, 5]);
+			var y1 = mmod(a2*x1*x1+a1*x1+S, P);
+			var y2 = mmod(a2*x2*x2+a1*x2+S, P);
+			var y3 = mmod(a2*x3*x3+a1*x3+S, P);
+			var y4 = mmod(a2*x4*x4+a1*x4+S, P);
+			var y5 = mmod(a2*x5*x5+a1*x5+S, P);
 
 			pl("Раздаём доли");
-			pl("(x1, y1) = ("+x1+", "+y1+")");
-			pl("(x2, y2) = ("+x2+", "+y2+")");
-			pl("(x3, y3) = ("+x3+", "+y3+")");
-			pl("(x4, y4) = ("+x4+", "+y4+")");
-			pl("(x5, y5) = ("+x5+", "+y5+")");
+			pl("$(x_1, y_1) "+"= ("+x1+", ("+a2+"*"+x1+"^2+"+a1+"*"+x1+"+"+S+") \\bmod "+P+")"+" = ("+x1+", "+y1+")$");
+			pl("$(x_2, y_2) "+"= ("+x2+", ("+a2+"*"+x2+"^2+"+a1+"*"+x2+"+"+S+") \\bmod "+P+")"+" = ("+x2+", "+y2+")$");
+			pl("$(x_3, y_3) "+"= ("+x3+", ("+a2+"*"+x3+"^2+"+a1+"*"+x3+"+"+S+") \\bmod "+P+")"+" = ("+x3+", "+y3+")$");
+			pl("$(x_4, y_4) "+"= ("+x4+", ("+a2+"*"+x4+"^2+"+a1+"*"+x4+"+"+S+") \\bmod "+P+")"+" = ("+x4+", "+y4+")$");
+			pl("$(x_5, y_5) "+"= ("+x5+", ("+a2+"*"+x5+"^2+"+a1+"*"+x5+"+"+S+") \\bmod "+P+")"+" = ("+x5+", "+y5+")$");
 			pl("Теперь восстановим секрет. Для этого возьмём первые три доли.");
 			// теперь надо найти интерполяционный полином лагранжа.
-			
-			
+			function muldiv(a, b, mod){
+				while(a/b != Math.trunc(a/b)){a+=mod;}
+				return a/b;
+			}
+			pl("$l_1 = \\frac{x_2*x_3}{(x_1-x_2)*(x_1-x_3)} \\bmod "+P+" = \\frac{"+x2+"*"+x3+"}{("+x1+"-"+x2+")*("+x1+"-"+x3+")}\\bmod "+P+"$");
+			pl("$l_2 = \\frac{x_1*x_3}{(x_2-x_1)*(x_2-x_3)} \\bmod "+P+" = \\frac{"+x1+"*"+x3+"}{("+x2+"-"+x1+")*("+x2+"-"+x3+")}\\bmod "+P+"$");
+			pl("$l_3 = \\frac{x_1*x_2}{(x_3-x_1)*(x_3-x_2)} \\bmod "+P+" = \\frac{"+x1+"*"+x2+"}{("+x3+"-"+x1+")*("+x3+"-"+x2+")}\\bmod "+P+"$");
+			var l1 = muldiv(mmod(x2*x3, P), mmod((x1-x2)*(x1-x3), P), P);
+			var l2 = muldiv(mmod(x1*x3, P), mmod((x2-x1)*(x2-x3), P), P);
+			var l3 = muldiv(mmod(x1*x2, P), mmod((x3-x1)*(x3-x2), P), P);
+			var ans = mmod(l1*y1+l2*y2+l3*y3, P);
+			pl("$l_1*y_1+l_2*y_2+l_3*y_3 \\bmod "+P+" = "+ans+"$");
+			pl((ans==S)?"Проверка прошла успешно.":"Проверка провалена!");
+			//hz();
 		}
+		
+		
+		currentP = "task3";
+		p("<h5>Задача №3 - разделение секрета по схеме Шамира.</h5>");
+		createButton("Решить третье задание", solve3);
+		
+		function solve4(){
+			currentP = "ans4";
+			document.getElementById(currentP).innerHTML='';
+
+			S = getRandNum(20, 50);
+			
+			pl("Секретное число: $"+S+"$. Всего частей $5$, для восстановления достаточно $3$.");
+			do{var p = randomPrime(20, 30);}while(p<=S);
+			pl("Выберем простое число $p$ большее, чем секрет: $"+p+"$.");
+			pl("Выберем $5$ взаимнопростых чисел, каждое из которых будет больше $"+p+"$.");
+			pl("На эти числа также накладывается ограничение - $d_1*d_2*d_3 &lt; p*d_4*d_5$");
+			//var d1, d2, d3, d4, d5;
+			do{
+				d1 = randomPrime(30, 50);
+				d2 = randomPrime(30, 50);
+				d3 = randomPrime(30, 50);
+				d4 = randomPrime(30, 50);
+				d5 = randomPrime(30, 50);
+				[d1, d2, d3, d4, d5] = [d1, d2, d3, d4, d5].sort(function(a, b){return a-b;})
+			}while(([d1, d2, d3, d4, d5].filter((v, i, a) => a.indexOf(v) === i).length!=5) || (d1*d2*d3<p*d4*d5));
+			pl("$d_1 = "+d1+"$.");
+			pl("$d_2 = "+d2+"$.");
+			pl("$d_3 = "+d3+"$.");
+			pl("$d_4 = "+d4+"$.");
+			pl("$d_5 = "+d5+"$.");
+			pl("Выберем число $R$, такое. что $R&lt;\\frac{d_1*d_2*d_3-S}{p} = "+(d1*d2*d3-S)/p+"$");
+			var r = getRandNum(100, (d1*d2*d3-S)/p);
+			pl("$R = "+r+"$.");
+			var Ss = S+r*p;
+			pl("Вычислим $S'=S+R*p="+Ss+"$");
+			pl("Вычислим доли для каждого агента:");
+			k1 = mmod(Ss, d1);
+			k2 = mmod(Ss, d2);
+			k3 = mmod(Ss, d3);
+			k4 = mmod(Ss, d4);
+			k5 = mmod(Ss, d5);
+			pl("$("+d1+", "+k1+")$");
+			pl("$("+d2+", "+k2+")$");
+			pl("$("+d3+", "+k3+")$");
+			pl("$("+d4+", "+k4+")$");
+			pl("$("+d5+", "+k5+")$");
+			pl("Число $p="+p+"$ публикуется, доли раздаются агентам.");
+			pl("Теперь произведём восстановление секрета.");
+			pl("Соберём $3$ доли от разных агентов, например доли второго, третьего и пятого агентов.");
+			pl("$("+d2+", "+k2+")$");
+			pl("$("+d3+", "+k3+")$");
+			pl("$("+d5+", "+k5+")$");
+			var D = d2*d3*d5;
+			pl("Вычислим $D = d_2*d_3*d_5 = "+D+"$.");
+			pl("Вычислим сомножители $D_1=\\frac{D}{d_2};D_2=\\frac{D}{d_3};D_3=\\frac{D}{d_5}$");
+			var D1 = D/d2, D2 = D/d3, D3 = D/d5;
+			pl("$D_1 = "+D1+"$.");
+			pl("$D_2 = "+D2+"$.");
+			pl("$D_3 = "+D3+"$.");
+			pl("Вычислим $D_1^{-1};D_2^{-1};D_3^{-1}$");
+			Dm1 = modInv(D1, d2);
+			Dm2 = modInv(D2, d3);
+			Dm3 = modInv(D3, d5);
+			pl("$D_1^{-1} = "+Dm1+"$");
+			pl("$D_2^{-1} = "+Dm2+"$");
+			pl("$D_3^{-1} = "+Dm3+"$");
+			pl("Вычислим $S' = (k_2*D_1*D_1^{-1} + k_3*D_2*D_2^{-1} + k_5*D_3*D_3^{-1})\\bmod p$");
+			var nSs = mmod(k2*D1*Dm1 + k3*D2*Dm2 + k5*D3*Dm3, D);
+			pl("$S' = "+nSs+"$.");
+			pl((nSs==Ss)?"Как видно, вычисленное значение $S'$ совпало с первоночальным.":"Проверка не сошлась");
+			var nS = mmod(nSs, p);
+			pl("Вычесленный секрет равен $"+nS+"$.");
+			pl((nS == S)?"Как видно вычесленный секрет совпадает с первоначальным. Проверка прошла успешно.":"Проверка не сошлась");
+		}
+		
+		currentP = "task4";
+		p("<h5>Задача №4 - разделение секрета по схеме Асмута-Блума.</h5>")
+		createButton("Решить", solve4);
 		
 	</script>
 		
