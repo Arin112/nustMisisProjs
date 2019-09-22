@@ -5,10 +5,10 @@
 	<head><title>
 		Практическое занятие №1. Волков Д.А. МПИ-19-2-2
 	</title>
-		<h3>Практическое занятие №1. Волков Д.А. МПИ-19-2-2</h3>
 	</head>
 
 	<body class="bg-light">
+	<div class="container">
 <!-- jQuery v1.10.2 --><script>
 /*! jQuery v1.10.2 | (c) 2005, 2013 jQuery Foundation, Inc. | jquery.org/license
 //@ sourceMappingURL=jquery-1.10.2.min.map
@@ -46,9 +46,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 
 	<style>
 	body {
-	  padding-top: 5rem;
-	  padding: 3rem 10rem;
-	  text-align: left;
+	  padding-top: 3rem;
 	}
 	code {
 		font-family: Courier, 'New Courier', monospace;
@@ -67,6 +65,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 <script src="https://cdn.jsdelivr.net/npm/katex@0.11.0/dist/katex.min.js" integrity="sha384-JiKN5O8x9Hhs/UE5cT5AAJqieYlOZbGT3CHws/y97o3ty4R7/O5poG9F3JoiOYw1" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/katex@0.11.0/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
     onload="renderMathInElement(document.body);"></script>
+	<h3>Практическое занятие №1. Волков Д.А. МПИ-19-2-2</h3>		
 	<p id="task1"></p>
 	<p id="ans"></p>
 	<p id="task2"></p>
@@ -424,7 +423,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			pl((nSs==Ss)?"Как видно, вычисленное значение $S'$ совпало с первоночальным.":"Проверка не сошлась");
 			var nS = mmod(nSs, p);
 			pl("Вычесленный секрет равен $S = S' \\bmod p = "+nSs+"\\bmod"+p+" = "+nS+"$.");
-			pl((nS == S)?"Как видно вычесленный секрет совпадает с первоначальным. Проверка прошла успешно.":"Проверка не сошлась");
+			pl((nS == S)?"Как видно, вычесленный секрет совпадает с первоначальным. Проверка прошла успешно.":"Проверка не сошлась");
 		}
 		
 		currentP = "task4";
@@ -432,6 +431,6 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 		createButton("Решить", solve4);
 		
 	</script>
-		
+	</div>
 	</body>
 </html>
