@@ -71,9 +71,10 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 
 	<script>
 		tagStack__=[];
-		function p(s){ document.getElementById(currentP).insertAdjacentHTML('beforeend', s); /*console.log(s);*/ renderMathInElement(document.getElementById(currentP), {delimiters: [{left: "$$", right: "$$", display: true},{left: "$", right: "$", display: false}]});}
-		function pl(s){ document.getElementById(currentP).insertAdjacentHTML('beforeend', s+"<br>"); /*console.log(s);*/renderMathInElement(document.getElementById(currentP), {delimiters: [{left: "$$", right: "$$", display: true},{left: "$", right: "$", display: false}]});}
-		function newLine(){ document.getElementById(currentP).insertAdjacentHTML('beforeend', "<br>"); renderMathInElement(document.getElementById(currentP), {delimiters: [{left: "$$", right: "$$", display: true},{left: "$", right: "$", display: false}]});}
+		function p(s){ document.getElementById(currentP).insertAdjacentHTML('beforeend', s); /*console.log(s);*/ }
+		function renderKatex(){renderMathInElement(document.getElementById(currentP), {delimiters: [{left: "$$", right: "$$", display: true},{left: "$", right: "$", display: false}]});};
+		function pl(s){ document.getElementById(currentP).insertAdjacentHTML('beforeend', s+"<br>"); /*console.log(s);*/;}
+		function newLine(){ document.getElementById(currentP).insertAdjacentHTML('beforeend', "<br>");}
 		function input(name){ return document.getElementById(name).value; }
 		function output(name, data){ document.getElementById(name).value=data; }
 		function hz(){ document.getElementById(currentP).insertAdjacentHTML('beforeend', "<hr>"); }
@@ -261,14 +262,14 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 		createEdit("Key");
 		createButton("Ввод", function(){
 			var s = input("Key"), ts = "";
-			s = s.toLowerCase();
+			s = s.toUpperCase();
 			for(var i=0;i<s.length;i++){
 				if(s.indexOf(s[i])==i)
-					if("wertyuiopasdfghjklzxcvbnm".indexOf(s[i])!=-1)
+					if("qwertyuiopasdfghklzxcvbnm".split('').sort().join("").toUpperCase().indexOf(s[i])!=-1)
 						ts+=s[i];
 			}
 			ts = ts.split('');
-			var pl = "wertyuiopasdfghjklzxcvbnm";
+			var pl = "qwertyuiopasdfghklzxcvbnm".split('').sort().join("").toUpperCase();
 			for(var i=0;i<5;i++){
 				for(var j=0;j<5;j++){
 					pushId("table1IJ"+i+j);
@@ -312,54 +313,72 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 		createTextArea("inText");
 		newLine();
 		slpTime = 500;
-		createButton("Зашифровать", async function(){
+		createButton("Зашифровать", (async function f(){try{
+			if(f.runned)return;
+			f.runned = true;
 			if(!tableAr[0][0]){
 				alert("Сначала введите ключ");
+				f.runned = false;
 				return;
 			}
 			if(input("inText")==""){
 				alert("Введите шифруемый текст");
+				f.runned = false;
 				return;
 			}
 			pushId("ans");
 			clear();
 			
-			var s = input("inText").toLowerCase(), ts="";
-			pl("Приведение к нижнему регистру: "+s);
+			var s = input("inText").toUpperCase(), ts="";
+			//pl("Приведение к нижнему регистру: "+s);
 			
 			for(var i=0;i<s.length;i++)
-				if("wertyuiopasdfghjklzxcvbnm".indexOf(s[i])!=-1)
+				if(s[i]=='j')ts+='i';
+				else if("qwertyuiopasdfghklzxcvbnm".toUpperCase().indexOf(s[i])!=-1)
 					ts+=s[i];
 			s=ts; ts="";
-			pl("Отбрасывание нешифруемых символов: "+s);
+			//pl("Отбрасывание нешифруемых символов: "+s);
 			
-			for(var i=0;i<s.length-1;i++){
+			for(var i=0;i<s.length-1;i+=2){
 				if(s[i]==s[i+1]){
-					if(s[i]!='x'){
-						s=s.insert(i+1, 'x');
+					if(s[i]!='X'){
+						s=s.insert(i+1, 'X');
 					}else{
 						s=s.erase(i);
 						i--;
+						if(i%2)i--;
 					}
 				}
+				if(i%2)i--;
 			}
-			pl("Устранение дубликантов: "+s);
+			//pl("Устранение дубликантов: "+s);
 			if(s.length%2){
-				if(s[s.length-1]!='x'){
-					s=s+'x';
+				if(s[s.length-1]!='X'){
+					s=s+'X';
 				}else{
 					s=s.erase(s.length-1);
 				}
 			}
 			s = s.match(/.{1,2}(?=(.{2})+(?!.))|.{1,2}$/g);
-			pl("Разбиение на биграммы: " + s.join(" "));
-			// await sleep(1000);
-			p("Шифрование биграмм :");
-			var gs = [];
+			//pl("Разбиение на биграммы: " + s.join(" "));
+			pl("Преобразованный открытый текст: ");
+			tag(p, "", "openText");
+			pushId("openText");
+			p(s.join(" "));
+			popId();
 			
+			// await sleep(1000);
+			//p("Шифрование биграмм :");
+			var gs = [];
+			newLine();
+			pl("Зашифрованный текст:");
+			tag("p", "", "outText");
+			pushId("outText");
+			var oldS = s.slice();
 			function iOf(ch){ for(var i=0;i<5;i++) for(j=0;j<5;j++) if(tableAr[i][j]==ch) return i;}
 			function jOf(ch){ for(var i=0;i<5;i++) for(j=0;j<5;j++) if(tableAr[i][j]==ch) return j;}
 			//console.log(s.length);
+			//var record = [];
 			for(var i=0; i<s.length;i++){
 				fromId("table1IJ"+iOf(s[i][0])+jOf(s[i][0])).style.background="red";
 				fromId("table1IJ"+iOf(s[i][1])+jOf(s[i][1])).style.background="red";
@@ -375,6 +394,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 					di1 = iOf(s[i][0]), dj1 = jOf(s[i][1]);
 					di2 = iOf(s[i][1]), dj2 = jOf(s[i][0]);
 				}
+				
 				if(fromId("table1IJ"+di1+dj1).style.background=="red"){
 					fromId("table1IJ"+di1+dj1).style.background="brown"
 				}else fromId("table1IJ"+di1+dj1).style.background="lime";
@@ -395,19 +415,116 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 				fromId("table1IJ"+di1+dj1).style.background="";
 				fromId("table1IJ"+di2+dj2).style.background="";
 				s[i] = ""+tableAr[di1][dj1] + tableAr[di2][dj2];
-				p(s[i]+" ");
+				pushId("openText");
+				clear();
+				for(var j=0;j<oldS.length;j++){
+					if(j!=i)p(""+oldS[j]+" ");
+					else {
+						var cr = pTag("span");
+						p(""+oldS[j]);
+						fromId(cr).style.background="red";
+						popId();
+						p(" ");
+					}
+				}
+				popId();//openText
+				pushId("outText");
+				clear();
+				for(var j=0;j<=i;j++){
+					if(j!=i)p(s[j]+" ");
+					else{
+						var cr = pTag("span");
+						fromId(cr).style.background="lime";
+						p(s[j]);
+						popId();
+					}
+				}
+				popId(); // outText
 				await sleep(slpTime);
 			}
-			//pl(s.join(" "));
-			newLine();
-			pl("Зашифрованный текст:");
-			createTextArea("outText");
-			pushId("outText");
-			p(s.join(""));
 			popId(); // "outText"
-			popId(); // p ans
+			
+			pushId("openText"); clear(); p(oldS.join(" ")); popId();
+			pushId("outText"); clear(); p(s.join(" ")); popId();
+			var tid1 = getRandId(), tid2 = getRandId(), tid3 = getRandId();
+			function proc(){
+				var st = input(tid3);
+				for(var i=0;i<5;i++) for(var j=0;j<5;j++) fromId("table1IJ"+i+j).style.background="";
+				if(st==0){
+					pushId("openText"); clear(); p(oldS.join(" ")); popId();
+					pushId("outText"); clear(); p(s.join(" ")); popId();
+				}else{
+					st--;
+					pushId("openText");
+					clear();
+					for(var i=0;i<s.length;i++){
+						if(i!=st){
+							p(oldS[i]+" ");
+						}else{
+							var cr = pTag("span");
+							fromId(cr).style.background="red";
+							p(oldS[i]);
+							popId();
+							p(" ");
+						}
+					}
+					popId();
+					pushId("outText");
+					clear();
+					for(var i=0;i<s.length;i++){
+						if(i!=st){
+							p(s[i]+" ");
+						}else{
+							var cr = pTag("span");
+							fromId(cr).style.background="lime";
+							p(s[i]);
+							popId();
+							p(" ");
+						}
+					}
+					popId();
+					fromId("table1IJ"+iOf(oldS[st][0])+jOf(oldS[st][0])).style.background="red";
+					fromId("table1IJ"+iOf(oldS[st][1])+jOf(oldS[st][1])).style.background="red";
 
-		});
+					if(fromId("table1IJ"+iOf(s[st][0])+jOf(s[st][0])).style.background=="red"){
+						fromId("table1IJ"+iOf(s[st][0])+jOf(s[st][0])).style.background="brown";
+					}else fromId("table1IJ"+iOf(s[st][0])+jOf(s[st][0])).style.background="lime";
+
+					if(fromId("table1IJ"+iOf(s[st][1])+jOf(s[st][1])).style.background=="red"){
+						fromId("table1IJ"+iOf(s[st][1])+jOf(s[st][1])).style.background="brown";
+					}else fromId("table1IJ"+iOf(s[st][1])+jOf(s[st][1])).style.background="lime";
+				}
+			}
+			function upFunc(){
+				if(input(tid3)<s.length){
+					output(tid3, Number(input(tid3))+1);
+				}
+				if(!isNaN(input(tid3))){
+					proc();
+				}
+			};
+			function downFunc(){
+				if(input(tid3)>0 && s.length){
+					output(tid3, input(tid3)-1);
+				}
+				if(!isNaN(input(tid3))){
+					proc();
+				}
+
+			};
+			
+			p("<form><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td rowspan=\"2\"><input id= \""+tid3+"\" type=\"text\" name=\"number\" value=\"0\" style=\"width:50px;height:23px;font-weight:bold;\" /></td><td><input id = \""+tid1+"\" type=\"button\" value=\" /\\ \" style=\"font-size:7px;margin:0;padding:0;width:20px;height:13px;\" ></td></tr><tr><td><input id= \""+tid2+"\" type=button value=\" \\/ \" style=\"font-size:7px;margin:0;padding:0;width:20px;height:12px;\" ></td></tr></table></form>");
+			fromId(tid1).onclick = upFunc;
+			fromId(tid2).onclick = downFunc;
+			//pl(s.join(" "));
+			//newLine();
+			
+			
+			//p(s.join(""));
+			
+			popId(); // p ans
+			f.runned=false;
+		}catch(er){alert("Недопустимое сообщение для шифрования");f.runned=false;}}));
 		newLine();
 		pl("Нажимайте f и s для ускорения и замедления анимации шифрования.")
 		pTag("p", "", "sleepTimeId");
@@ -462,6 +579,8 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			popId();
 		popId();
 	// typaghzxnmweuisdjkcvjckvlbznxmwueirotpyauoipsfdgjlkzcbvnwsedrftgyhujikolpzaxwmycizpkff - nice test
+	// ABACADAEAFAGAHAIAJAKALAMANAOAPARASATAUAVAWAXAYAZBCBDBEBFBGBHBIBJBKBLBMBNBOBPBRBSBTBUBVBWBXBYBZCDCECFCGCHCICJCKCLCMCNCOCPCRCSCTCUCVCWCXCYCZDEDFDGDHDIDJDKDLDMDNDODPDRDSDTDUDVDWDXDYDZEFEGEHEIEJEKELEMENEOEPERESETEUEVEWEXEYEZFGFHFIFJFKFLFMFNFOFPFRFSFTFUFVFWFXFYFZGHGIGJGKGLGMGNGOGPGRGSGTGUGVGWGXGYGZHIHJHKHLHMHNHOHPHRHSHTHUHVHWHXHYHZIJIKILIMINIOIPIRISITIUIVIWIXIYIZJKJLJMJNJOJPJRJSJTJUJVJWJXJYJZKLKMKNKOKPKRKSKTKUKVKWKXKYKZLMLNLOLPLRLSLTLULVLWLXLYLZMNMOMPMRMSMTMUMVMWMXMYMZNONPNRNSNTNUNVNWNXNYNZOPOROSOTOUOVOWOXOYOZPRPSPTPUPVPWPXPYPZRSRTRURVRWRXRYRZSTSUSVSWSXSYSZTUTVTWTXTYTZUVUWUXUYUZVWVXVYVZWXWYWZXYXZYZ - more tests
+	// hyzxyhazlmza
 	</script>
 	</div>
 	</body>
