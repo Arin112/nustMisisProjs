@@ -261,6 +261,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 		p("Введите ключ шифрования: ");
 		createEdit("Key");
 		createButton("Ввод", function(){
+			if(runned)return;
 			var s = input("Key"), ts = "";
 			s = s.toUpperCase();
 			for(var i=0;i<s.length;i++){
@@ -288,6 +289,9 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 					popId();
 				}
 			}
+			pushId("ans"); clear(); popId();
+			for(var i=0;i<5;i++) for(var j=0;j<5;j++) fromId("table1IJ"+i+j).style.background="";
+
 		});
 		newLine();
 		id = pTag("table", "table table-bordered");
@@ -313,19 +317,22 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 		createTextArea("inText");
 		newLine();
 		slpTime = 500;
+		runned = false;
 		createButton("Зашифровать", (async function f(){try{
-			if(f.runned)return;
-			f.runned = true;
+			if(runned)return;
+			runned = true;
+
 			if(!tableAr[0][0]){
 				alert("Сначала введите ключ");
-				f.runned = false;
+				runned = false;
 				return;
 			}
 			if(input("inText")==""){
 				alert("Введите шифруемый текст");
-				f.runned = false;
+				runned = false;
 				return;
 			}
+			for(var i=0;i<5;i++) for(var j=0;j<5;j++) fromId("table1IJ"+i+j).style.background="";
 			pushId("ans");
 			clear();
 			
@@ -523,8 +530,8 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			//p(s.join(""));
 			
 			popId(); // p ans
-			f.runned=false;
-		}catch(er){alert("Недопустимое сообщение для шифрования");f.runned=false;}}));
+			runned=false;
+		}catch(er){pushId("ans"); clear(); alert("Недопустимое сообщение для шифрования");runned=false;popId();}}));
 		newLine();
 		pl("Нажимайте f и s для ускорения и замедления анимации шифрования.")
 		pTag("p", "", "sleepTimeId");
