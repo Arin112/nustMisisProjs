@@ -79,6 +79,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 		function output(name, data){ document.getElementById(name).value=data; }
 		function hz(){ document.getElementById(currentP).insertAdjacentHTML('beforeend', "<hr>"); }
 		function createEdit(idName){ document.getElementById(currentP).insertAdjacentHTML('beforeend',"<input type=\"text\" class=\"form-control\" name="+idName+" id="+idName+">"); }
+		function createCheckBox(idName, checked=false){ p("<input type=\"checkbox\" "+(checked?"checked":"")+" id=\""+idName+"\">"); };
 		function createBox(idName){ document.getElementById(currentP).insertAdjacentHTML('beforeend',"<input type=\"text\" name="+idName+" id="+idName+" readonly>"); }
 		function createTextArea(idName){p("	<textarea class=\"form-control rounded-1\" id=\""+idName+"\" rows=\"5\" cols=\"60\"></textarea>");}
 		function getRandStr(size){ return [...Array(size)].map(i=>(~~(Math.random()*36)).toString(36)).join(''); }
@@ -335,6 +336,21 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			for(var i=0;i<5;i++) for(var j=0;j<5;j++) fromId("table1IJ"+i+j).style.background="";
 			pushId("ans");
 			clear();
+			p("Пробелы между биграммами ");
+			if(typeof(spaceCheckedLast)=="undefined"){
+				spaceCheckedLast=true;
+			}
+			createCheckBox("idCheckSpace", spaceCheckedLast);
+			newLine();
+			fromId("idCheckSpace").onclick = (function(){
+				//alert("before");
+				spaceCheckedLast=fromId("idCheckSpace").checked;
+				if((typeof(oldS) == "undefined") || (typeof(s) == "undefined"))return;
+				if(runned)return;
+				//alert("after");
+				proc();
+			});
+			newLine();
 			
 			var s = input("inText").toUpperCase(), ts="";
 			//pl("Приведение к нижнему регистру: "+s);
@@ -425,20 +441,20 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 				pushId("openText");
 				clear();
 				for(var j=0;j<oldS.length;j++){
-					if(j!=i)p(""+oldS[j]+" ");
+					if(j!=i)p(""+oldS[j]+(fromId("idCheckSpace").checked?" ":""));
 					else {
 						var cr = pTag("span");
 						p(""+oldS[j]);
 						fromId(cr).style.background="red";
 						popId();
-						p(" ");
+						if(fromId("idCheckSpace").checked)p(" ");
 					}
 				}
 				popId();//openText
 				pushId("outText");
 				clear();
 				for(var j=0;j<=i;j++){
-					if(j!=i)p(s[j]+" ");
+					if(j!=i)p(s[j]+(fromId("idCheckSpace").checked?" ":""));
 					else{
 						var cr = pTag("span");
 						fromId(cr).style.background="lime";
@@ -451,28 +467,28 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			}
 			popId(); // "outText"
 			
-			pushId("openText"); clear(); p(oldS.join(" ")); popId();
-			pushId("outText"); clear(); p(s.join(" ")); popId();
+			pushId("openText"); clear(); p(oldS.join(fromId("idCheckSpace").checked?" ":"")); popId();
+			pushId("outText"); clear(); p(s.join(fromId("idCheckSpace").checked?" ":"")); popId();
 			var tid1 = getRandId(), tid2 = getRandId(), tid3 = getRandId();
 			function proc(){
 				var st = input(tid3);
 				for(var i=0;i<5;i++) for(var j=0;j<5;j++) fromId("table1IJ"+i+j).style.background="";
 				if(st==0){
-					pushId("openText"); clear(); p(oldS.join(" ")); popId();
-					pushId("outText"); clear(); p(s.join(" ")); popId();
+					pushId("openText"); clear(); p(oldS.join(fromId("idCheckSpace").checked?" ":"")); popId();
+					pushId("outText"); clear(); p(s.join(fromId("idCheckSpace").checked?" ":"")); popId();
 				}else{
 					st--;
 					pushId("openText");
 					clear();
 					for(var i=0;i<s.length;i++){
 						if(i!=st){
-							p(oldS[i]+" ");
+							p(oldS[i]+(fromId("idCheckSpace").checked?" ":""));
 						}else{
 							var cr = pTag("span");
 							fromId(cr).style.background="red";
 							p(oldS[i]);
 							popId();
-							p(" ");
+							p((fromId("idCheckSpace").checked?" ":""));
 						}
 					}
 					popId();
@@ -480,13 +496,13 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 					clear();
 					for(var i=0;i<s.length;i++){
 						if(i!=st){
-							p(s[i]+" ");
+							p(s[i]+(fromId("idCheckSpace").checked?" ":""));
 						}else{
 							var cr = pTag("span");
 							fromId(cr).style.background="lime";
 							p(s[i]);
 							popId();
-							p(" ");
+							p((fromId("idCheckSpace").checked?" ":""));
 						}
 					}
 					popId();
@@ -526,14 +542,13 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			//pl(s.join(" "));
 			//newLine();
 			
-			
 			//p(s.join(""));
 			
 			popId(); // p ans
 			runned=false;
 		}catch(er){pushId("ans"); clear(); alert("Недопустимое сообщение для шифрования");runned=false;popId();}}));
 		newLine();
-		pl("Нажимайте f и s для ускорения и замедления анимации шифрования.")
+		pl("Нажимайте f и s для ускорения и замедления анимации шифрования.");
 		pTag("p", "", "sleepTimeId");
 		pl("Текущая скорость: "+Math.round10(1000./slpTime, -1)+" кадров в секунду.");
 		popId();
