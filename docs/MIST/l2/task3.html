@@ -297,7 +297,7 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 		newLine();
 		id = pTag("table", "table table-bordered");
 		fromId(id).style.width = "300px";
-
+		
 		tableAr = new Array(5);
 		for(var i=0;i<5;i++) tableAr[i]=new Array(5);
 
@@ -335,6 +335,9 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			}
 			for(var i=0;i<5;i++) for(var j=0;j<5;j++) fromId("table1IJ"+i+j).style.background="";
 			pushId("ans");
+			fromId("ans").style.maxWidth = "550px";
+			fromId("ans").style.wordWrap = "break-word"
+
 			clear();
 			p("Пробелы между биграммами ");
 			if(typeof(spaceCheckedLast)=="undefined"){
