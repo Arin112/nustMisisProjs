@@ -335,8 +335,8 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			}
 			for(var i=0;i<5;i++) for(var j=0;j<5;j++) fromId("table1IJ"+i+j).style.background="";
 			pushId("ans");
-			fromId("ans").style.maxWidth = "550px";
-			fromId("ans").style.wordWrap = "break-word"
+			//fromId("ans").style.maxWidth = "550px";
+			//fromId("ans").style.wordWrap = "break-word"
 
 			clear();
 			p("Пробелы между биграммами ");
@@ -444,20 +444,22 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 				pushId("openText");
 				clear();
 				for(var j=0;j<oldS.length;j++){
-					if(j!=i)p(""+oldS[j]+(fromId("idCheckSpace").checked?" ":""));
+					if(j!=i)p(""+oldS[j]+(fromId("idCheckSpace").checked?" ":"&#8203;"));
 					else {
 						var cr = pTag("span");
 						p(""+oldS[j]);
 						fromId(cr).style.background="red";
 						popId();
-						if(fromId("idCheckSpace").checked)p(" ");
+						if(fromId("idCheckSpace").checked)
+							p(" ");
+						else p("&#8203;");
 					}
 				}
 				popId();//openText
 				pushId("outText");
 				clear();
 				for(var j=0;j<=i;j++){
-					if(j!=i)p(s[j]+(fromId("idCheckSpace").checked?" ":""));
+					if(j!=i)p(s[j]+(fromId("idCheckSpace").checked?" ":"&#8203;"));
 					else{
 						var cr = pTag("span");
 						fromId(cr).style.background="lime";
@@ -470,28 +472,28 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			}
 			popId(); // "outText"
 			
-			pushId("openText"); clear(); p(oldS.join(fromId("idCheckSpace").checked?" ":"")); popId();
-			pushId("outText"); clear(); p(s.join(fromId("idCheckSpace").checked?" ":"")); popId();
+			pushId("openText"); clear(); p(oldS.join(fromId("idCheckSpace").checked?" ":"&#8203;")); popId();
+			pushId("outText"); clear(); p(s.join(fromId("idCheckSpace").checked?" ":"&#8203;")); popId();
 			var tid1 = getRandId(), tid2 = getRandId(), tid3 = getRandId();
 			function proc(){
 				var st = input(tid3);
 				for(var i=0;i<5;i++) for(var j=0;j<5;j++) fromId("table1IJ"+i+j).style.background="";
 				if(st==0){
-					pushId("openText"); clear(); p(oldS.join(fromId("idCheckSpace").checked?" ":"")); popId();
-					pushId("outText"); clear(); p(s.join(fromId("idCheckSpace").checked?" ":"")); popId();
+					pushId("openText"); clear(); p(oldS.join(fromId("idCheckSpace").checked?" ":"&#8203;")); popId();
+					pushId("outText"); clear(); p(s.join(fromId("idCheckSpace").checked?" ":"&#8203;")); popId();
 				}else{
 					st--;
 					pushId("openText");
 					clear();
 					for(var i=0;i<s.length;i++){
 						if(i!=st){
-							p(oldS[i]+(fromId("idCheckSpace").checked?" ":""));
+							p(oldS[i]+(fromId("idCheckSpace").checked?" ":"&#8203;"));
 						}else{
 							var cr = pTag("span");
 							fromId(cr).style.background="red";
 							p(oldS[i]);
 							popId();
-							p((fromId("idCheckSpace").checked?" ":""));
+							p((fromId("idCheckSpace").checked?" ":"&#8203;"));
 						}
 					}
 					popId();
@@ -499,13 +501,13 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 					clear();
 					for(var i=0;i<s.length;i++){
 						if(i!=st){
-							p(s[i]+(fromId("idCheckSpace").checked?" ":""));
+							p(s[i]+(fromId("idCheckSpace").checked?" ":"&#8203;"));
 						}else{
 							var cr = pTag("span");
 							fromId(cr).style.background="lime";
 							p(s[i]);
 							popId();
-							p((fromId("idCheckSpace").checked?" ":""));
+							p((fromId("idCheckSpace").checked?" ":"&#8203;"));
 						}
 					}
 					popId();
@@ -539,7 +541,8 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 
 			};
 			
-			p("<form><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td rowspan=\"2\"><input id= \""+tid3+"\" type=\"text\" name=\"number\" value=\"0\" style=\"width:50px;height:23px;font-weight:bold;\" /></td><td><input id = \""+tid1+"\" type=\"button\" value=\" /\\ \" style=\"font-size:7px;margin:0;padding:0;width:20px;height:13px;\" ></td></tr><tr><td><input id= \""+tid2+"\" type=button value=\" \\/ \" style=\"font-size:7px;margin:0;padding:0;width:20px;height:12px;\" ></td></tr></table></form>");
+			p("<form id=\"tFormId\" action=\"#\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td rowspan=\"2\"><input id= \""+tid3+"\" type=\"text\" value=\"0\" style=\"width:50px;height:23px;font-weight:bold;\" /></td><td><input id = \""+tid1+"\" type=\"button\" value=\" /\\ \" style=\"font-size:7px;margin:0;padding:0;width:20px;height:13px;\" ></td></tr><tr><td><input id= \""+tid2+"\" type=button value=\" \\/ \" style=\"font-size:7px;margin:0;padding:0;width:20px;height:12px;\" ></td></tr></table></form>");
+			fromId("tFormId").onsubmit=function(){proc();return false;};
 			fromId(tid1).onclick = upFunc;
 			fromId(tid2).onclick = downFunc;
 			//pl(s.join(" "));
