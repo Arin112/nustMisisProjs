@@ -201,14 +201,14 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 			do{
 				p1 = randomPrime(), q1 = randomPrime();
 				n1 = p1*q1, phi1=(p1-1)*(q1-1), e1 = 7;
-				console.log("p1="+p1);
-				console.log("q1="+q1);
-				console.log("n1="+n1);
-				console.log("phi1="+phi1);
-				console.log("e1="+e1);
-				
+				//console.log("p1="+p1);
+				//console.log("q1="+q1);
+				//console.log("n1="+n1);
+				//console.log("phi1="+phi1);
+				//console.log("e1="+e1);
 			}
 			while(isNaN(d1=modInverse(e1, phi1)) || (gcd(e1, n1)!=1) || p1==q1 || (gcd(p1, q1)!=1) || (d1*e1%phi1!=1));
+			pl("Пара простых чисел для первого агента: $(p_1="+p1+", q_1="+q1+")$, их произведение $"+n1+"$, функция Эйлера от произведения - $\\varphi("+n1+")="+phi1+"$, открытая экспонента равна $7$.");
 			//var d1 = modInverse(e1, phi1);
 			pl("Открытая пара для первого агента: $("+e1.toString(10)+", "+n1.toString(10)+")$, закрытая пара для первого агента: $("+d1.toString(10)+", "+n1.toString(10)+")$.");
 
@@ -217,6 +217,8 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 				n2 = p2*q2, phi2=(p2-1)*(q2-1), e2 = 7;
 			}
 			while(isNaN(d2=modInverse(e2, phi2)) || (gcd(e2, n2)!=1) || p2==q2 || (gcd(p2, q2)!=1) || (d2*e2%phi2!=1));
+			pl("Пара простых чисел для второго агента: $(p_2="+p2+", q_2="+q2+")$, их произведение $"+n2+"$, функция Эйлера от произведения - $\\varphi("+n2+")="+phi2+"$, открытая экспонента равна $7$.");
+
 			//var d2 = modInverse(e2, phi2);
 			pl("Открытая пара для второго агента: $("+e2.toString(10)+", "+n2.toString(10)+")$, закрытая пара для второго агента: $("+d2.toString(10)+", "+n2.toString(10)+")$.");
 			
@@ -225,6 +227,8 @@ u[o]&&(delete u[o],c?delete n[l]:typeof n.removeAttribute!==i?n.removeAttribute(
 				n3 = p3*q3, phi3=(p3-1)*(q3-1), e3 = 7;
 			}
 			while(isNaN(d3=modInverse(e3, phi3)) || gcd(e3, n3)!=1 || p3==q3 || (gcd(p3, q3)!=1) || (d3*e3%phi3!=1));
+			pl("Пара простых чисел для третьего агента: $(p_3="+p3+", q_3="+q3+")$, их произведение $"+n3+"$, функция Эйлера от произведения - $\\varphi("+n3+")="+phi3+"$, открытая экспонента равна $7$.");
+
 			//var d3 = modInverse(e3, phi3);
 			pl("Открытая пара для третьего агента: $("+e3.toString(10)+", "+n3.toString(10)+")$, закрытая пара для третьего агента: $("+d3.toString(10)+", "+n3.toString(10)+")$.");
 
