@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html>
+	<head><title>
+		KNN
+	</title>
+	<meta charset="utf-8">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">	</head>
+	
+	<body class="bg-light" id="bodyId">
+	<div class="container">
+
+	
+
+    <style>
+	pre {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+	  .lh-condensed { line-height: 1.25; }
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+	
+	<style>
+	body {
+	  padding-top: 3rem;
+	  /*padding: 3rem 10rem;*/
+	  text-align: left;
+	}
+	code {
+		font-family: Courier, 'New Courier', monospace;
+		/*background-color: rgba(27,31,35,.05);*/
+		color: green;
+		border-radius: 3px;
+		font-size: 85%;
+		margin: 0;
+		padding: .2em .4em;
+
+	}
+	
+    </style>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+	<p id="mainId"></p>
+
+	<script>
+		tagStack__=[];
+		function p(s){ document.getElementById(currentP).insertAdjacentHTML('beforeend', s); /*console.log(s);*/ }
+		function renderKatex(){renderMathInElement(document.getElementById(currentP), {delimiters: [{left: "$$", right: "$$", display: true},{left: "$", right: "$", display: false}]});};
+		function pl(s){ document.getElementById(currentP).insertAdjacentHTML('beforeend', s+"<br>"); /*console.log(s);*/;}
+		function newLine(){ document.getElementById(currentP).insertAdjacentHTML('beforeend', "<br>");}
+		function input(name){ return document.getElementById(name).value; }
+		function output(name, data){ document.getElementById(name).value=data; }
+		function hz(){ document.getElementById(currentP).insertAdjacentHTML('beforeend', "<hr>"); }
+		function createEdit(idName){ document.getElementById(currentP).insertAdjacentHTML('beforeend',"<input type=\"text\" class=\"form-control\" name="+idName+" id="+idName+">"); }
+		function createCheckBox(idName, checked=false){ p("<input type=\"checkbox\" "+(checked?"checked":"")+" id=\""+idName+"\">"); };
+		function createBox(idName){ document.getElementById(currentP).insertAdjacentHTML('beforeend',"<input type=\"text\" name="+idName+" id="+idName+" readonly>"); }
+		function createTextArea(idName){p("	<textarea class=\"form-control rounded-1\" id=\""+idName+"\" rows=\"5\" cols=\"60\"></textarea>");}
+		function getRandStr(size){ return [...Array(size)].map(i=>(~~(Math.random()*36)).toString(36)).join(''); }
+		function getRandId(){ return "_"+getRandStr(20);}
+		function fromId(id){return document.getElementById(id);}
+		function createButton(name, func){
+			tid = getRandId();
+			document.getElementById(currentP).insertAdjacentHTML('beforeend',"<input id = "+tid+" type=\"button\" class=\"btn btn-secondary\" value="+name+" />");
+			document.getElementById(tid).onclick = func;
+		}
+		function getRandNum(from, to){ return from+~~(Math.random()*(to-from)); }
+		function mmod(a, b){
+			return ((a%b)+b)%b;
+		}
+		function isPrime(value){
+			for(var i = 3; i <= Math.sqrt(value); i+=2)
+				if(value % i === 0)
+					return false;
+			if(value === 2)return true;
+			if(value % 2 === 0)return false;
+			return value > 1;
+		}
+		function randomPrime(from=20, to=40){
+			var rCnt = getRandNum(from, to);
+			var i=12;
+			for(var cnt=0;cnt<rCnt;i++){
+				if(isPrime(i))cnt+=1;
+			}
+			if(!(isPrime(i-1)))alert("Не простое");
+			return i-1;
+		}
+		String.prototype.insert = function (index, string) {
+		  if (index > 0)
+			return this.substring(0, index) + string + this.substring(index, this.length);
+
+		  return string + this;
+		};
+		String.prototype.erase = function (index) {
+		  if (index >= 0)
+			return this.substring(0, index) + this.substring(index+1, this.length);
+
+		  return ""+this;
+		};
+		function extGcd(a, b) {
+			a = +a; b = +b;
+			if (a !== a || b !== b) return [NaN, NaN, NaN];
+
+			if (a === Infinity || a === -Infinity || b === Infinity || b === -Infinity) 
+				return [Infinity, Infinity, Infinity];
+			
+			if ((a % 1 !== 0) || (b % 1 !== 0)) return false;
+			
+			var signX = (a < 0) ? -1 : 1,
+			signY = (b < 0) ? -1 : 1,
+			x = 0,
+			y = 1,
+			u = 1,
+			v = 0,
+			q, r, m, n;
+			a = Math.abs(a);
+			b = Math.abs(b);
+
+			while (a !== 0) {
+				q = Math.floor(b / a);
+				r = b % a;
+				m = x - u * q;
+				n = y - v * q;
+				b = a;
+				a = r;
+				x = u;
+				y = v;
+				u = m;
+				v = n;
+			}
+			return [b, signX * x, signY * y];
+		}
+		function shuffle(a) {
+			var j, x, i;
+			for (i = a.length - 1; i > 0; i--) {
+				j = Math.floor(Math.random() * (i + 1));
+				x = a[i];
+				a[i] = a[j];
+				a[j] = x;
+			}
+			return a;
+		}
+		var gcd = function(a, b) {
+			return b==0?a:gcd(b, a % b);
+		}
+		function modInv(a, b){
+			a %= b;
+			for (var x = 1; x < b; x++) {
+				if ((a*x)%b == 1) {
+					return x;
+				}
+			}
+			alert('no solution');
+		}
+		function modInverse(a, b){
+			if(gcd(a, b)!=1)return NaN;
+			return (modInv(a, b)%b+b)%b;
+		}
+		function modPow(a, b, m){
+			if(b==0)return 1;
+			var ans=1;
+			for(var i=0;i<b;i++){
+				ans=(ans*a)%m;
+			}
+			return ans;
+		}
+		function isLetter(str) {
+		  return str.length === 1 && str.match(/[a-z]/i);
+		}
+		function tag(name, Class="", id="", extra=""){
+			tid = (id==""?getRandId():id);
+			p("<"+name+" id=\""+tid+"\""+(Class==""?"":(" class= \""+Class+"\""))+" "+extra+"></"+name+">");
+			return tid;
+		}
+		function pushId(newId){
+			tagStack__.push(newId);
+			currentP = newId;
+		}
+		function popId(){
+			tagStack__.pop();
+			if(tagStack__.length)
+				currentP = tagStack__[tagStack__.length-1];
+		}
+		function curId(){ return tagStack__[tagStack__.length-1]; }
+		function clear(){fromId(curId()).innerHTML='';}
+
+		function pTag(name, Class="", id="", extra=""){
+			tid = (id==""?getRandId():id);
+			//console.log(tid);
+			tag(name, Class, tid, extra);
+			pushId(tid);
+			return tid;
+		}
+		function pSpoiler(desc){
+			var tid = getRandId();
+			var area = getRandId();
+			p("<a class=\"btn btn-primary\" data-toggle=\"collapse\" href=\"#"+area+"\" aria-expanded=\"false\" aria-controls=\""+area+"\">"+desc+"</a>");
+			p("<div class=\"collapse\" id=\""+area+"\"> <div id=\""+tid+"\"class=\"card card-block\">");
+			pushId(tid);
+			return tid;
+		}
+		function sleep(ms) {
+			return new Promise(resolve => setTimeout(resolve, ms));
+		}
+		function decimalAdjust(type, value, exp) {
+			// Если степень не определена, либо равна нулю...
+			if (typeof exp === 'undefined' || +exp === 0) {
+			  return Math[type](value);
+			}
+			value = +value;
+			exp = +exp;
+			// Если значение не является числом, либо степень не является целым числом...
+			if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
+			  return NaN;
+			}
+			// Сдвиг разрядов
+			value = value.toString().split('e');
+			value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
+			// Обратный сдвиг
+			value = value.toString().split('e');
+			return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
+		}
+		if (!Math.round10) {
+			Math.round10 = function(value, exp) {
+			  return decimalAdjust('round', value, exp);
+			};
+		}
+		function pre(s){pTag("pre");p(s);popId();}
+		function prel(s){pre(s); newLine();}
+		let tabStr = "";
+		function indUp(){tabStr+="    ";}
+		function indDown(){tabStr=tabStr.split('').filter((v, i, ar)=>i<ar.length-4).join('');}
+		function ind(){return tabStr;}
+		const zip = (...rows) => [...rows[0]].map((_,c) => rows.map(row => row[c]))
+		function plot(y, ...tail){
+			let colors =[
+				'rgb(54, 162, 235)',
+				'rgb(255, 99, 132)',
+				'rgb(255, 159, 64)',
+				'rgb(255, 205, 86)',
+				'rgb(75, 192, 192)',
+				'rgb(153, 102, 255)',
+				'rgb(201, 203, 207)'];
+			let canvasId = pTag("canvas");
+			let ctx = fromId(canvasId).getContext('2d');
+			
+			let data = {
+				type: 'line',
+				data: {
+					labels:y,
+					datasets: tail.map((v, i)=>{
+						return{label: i+1,
+						backgroundColor: colors[i%colors.length],
+						borderColor: colors[i%colors.length],
+						data: v,
+						fill: false}
+					})
+				},
+				options: {
+					scales: {
+						yAxes: [{
+							ticks: {
+								suggestedMin: 0,
+								suggestedMax: 100
+							}
+						}]
+					}
+				}
+			};
+			let myChart = new Chart(ctx, data);
+			popId();
+			return {chart:myChart, config:data};
+		}
+		
+		const rnd = (l, r)=>Math.random()*(r-l)+l;
+		const nrnd = (m, d)=>Math.sqrt(-2.0*Math.log(Math.random()||1e-9 ))*Math.cos(2.0*Math.PI*(Math.random()||1e-9))*d+m;
+		//const round = (i, n=2)=> Number((""+i).split(".").map((v, i)=>i?v.slice(0, n):v).join("."));
+		const round = (v, n=3)=>Math.round10(v, -n);
+		const genObj = (c, ...atrs)=> new Array(atrs.length+1).fill(0).map((v, i)=>i?atrs[i-1].n?round(nrnd(atrs[i-1].m, atrs[i-1].d)):round(rnd(atrs[i-1].l, atrs[i-1].r)):c);
+		
+		pushId("mainId");
+		pTag("h3"); p("Пример KNN."); popId();
+		pl("Все числа округлены до трёх знаков после запятой для удобства чтения.");
+		pl("Пусть датасет выглядит следующим образом:");
+		pl("На одной строке располагается один объект, первое число в строке, оно же первый атрибут - класс объекта.");
+		pl("Остальные числа в строке - просто атрибуты элемента.");
+		pl("Возьмём для примера сгенерированный вручную датасет, в котором каждый атрибут сгенерирован случайно, но при этом");
+		pl("для каждого класса использованы свои мат. ожидания и дисперсии.");
+
+		pl("Датасет собственной персоной:");
+		
+		const generators = [()=>genObj(1, {n:true, m:3, d:1}, {n:false, l:3, r:7}, {n:true, m:10, d:1}, {n:true, m:5, d:2}),
+							()=>genObj(2, {n:true, m:5, d:1}, {n:false, l:1, r:5}, {n:true, m:5, d:1}, {n:true, m:7, d:2}),
+							()=>genObj(3, {n:true, m:12, d:1}, {n:false, l:4, r:6}, {n:true, m:3, d:1}, {n:true, m:9, d:2})];
+		const trainData = new Array();
+		[2, 3, 4].forEach((v, idx)=>{for(let i=0;i<v;i++)trainData.push(generators[idx]())});
+		trainData.forEach(v=>pre(v.join(",\t")));
+		let min = new Array(trainData[0].length).fill(1e9), max = new Array(trainData[0].length).fill(-1e9);
+		for(let i=0;i<trainData.length;i++){
+			for(let j=1;j<trainData[i].length;j++){
+				min[j]=min[j]>trainData[i][j]?trainData[i][j]:min[j];
+				max[j]=max[j]<trainData[i][j]?trainData[i][j]:max[j];
+			}
+		}
+		pl("Нормализуем по методу минимакса.");
+		pl("Минимум для каждого атрибута:");
+		pre("\t"+min.slice(1).join(",\t"));
+		pl("Максимум для каждого атрибута:");
+		pre("\t"+max.slice(1).join(",\t"));
+		pl("Разница для каждого атрибута:");
+		pre("\t"+zip(min, max).slice(1).map(v=>round(Math.abs(v[0]-v[1]))).join(",\t"));
+		pl("Преобразованная таблица атрибутов:");
+		for(let i=0;i<trainData.length;i++){
+			for(let j=1;j<trainData[i].length;j++){
+				trainData[i][j]=(trainData[i][j]-min[j])/(max[j]-min[j]);
+			}
+		}
+		
+		trainData.forEach(v=>pre(v.map(v=>round(v)).join(",\t")));
+		
+		const dist = (a, b)=>zip(a, b).slice(1).map(v=>(v[0]-v[1])*(v[0]-v[1])).reduce((ac, v)=>ac+v);
+		
+		pl("Воспользуемся метрикой Евклида и вычислим LOO для всех значени k от единицы до восьми.");
+		pl("Заметим, что для данного датасета случайный ответ будет давать в среднем LOO ~ 66.7%.");
+		pl("Если всегда давать ответ равный самому распространённому классу в выборке, то LOO ~ 55.6%");
+		let idB1 = tag("p");
+		pl("Полный лог вычислений:");
+		let arLOO=new Array();
+		let bestK=-1, bestLOO=1e9;
+		for(let k=1;k<9;k++){
+			pl("Для k равного "+k+":");
+			let LOO = 0;
+			for(let idxOne=0;idxOne<trainData.length;idxOne++){
+				let minDist = -1, idxMin=-1;
+				let ar = trainData.map((v, i)=>i!=idxOne?[v[0],dist(v, trainData[idxOne])]:[v[0], 1e9]);
+				ar = ar.sort((a, b)=>a[1]-b[1]);
+				const cnt = (tr, what, k)=>tr.reduce((ac, v, i)=>ac+(i<k?v[0]==what?1:0:0), 0);
+				const cnt1 = cnt(ar, 1, k), cnt2=cnt(ar, 2, k), cnt3=cnt(ar, 3, k);
+				const resClass = (cnt3>=cnt2 && cnt3>=cnt1?3:cnt2>=cnt1?2:1);
+				p("Для "+(idxOne+1)+"-го элемента датасета: ")
+				pl("среди "+k+" ближайших соседей "+cnt1+" элементов первого класса, "+cnt2+" второго, "+cnt3+" третьего. Классифицированно как "+resClass+", "+(resClass==trainData[idxOne][0]?"верно":"неверно"));				
+				if(resClass!=trainData[idxOne][0])LOO++;
+			}
+			LOO=LOO/trainData.length*100;
+			if(LOO<bestLOO){
+				bestLOO=LOO;
+				bestK=k;
+			}
+			arLOO.push(LOO);
+			pushId(idB1);
+			pl("Результат LOO для k="+k+" - "+round(LOO)+"%.");
+			popId();
+			pl();
+		}
+		pushId(idB1);
+		pl("Наилучший результат - k="+bestK+" с LOO = "+round(bestLOO)+"%.");
+		pTag("div", "", "", "style='width:50%; height:50%'");
+			plot(arLOO.map((_, i)=>i+1), arLOO);
+		popId();
+		pl("Стоит заметить, что на любых других данных, а особенно на датасетах с числом элементов больше 100, вид графика может радикально отличаться от приведённого.");
+		popId();
+		//console.log(trainData);
+		
+	</script>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	</body>
+</html>
